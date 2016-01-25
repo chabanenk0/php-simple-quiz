@@ -6,7 +6,7 @@
  * Time: 15:02
  */
 
-namespace DataProvider;
+namespace Chabanenko\SimpleQuiz\DataProvider;
 
 
 class TestProvider

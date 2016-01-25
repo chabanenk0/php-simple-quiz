@@ -1,8 +1,10 @@
 <?php
 
-require_once './DataProvider/TestProvider.php';
+require_once 'vendor/autoload.php';
+
+$testProvider = new Chabanenko\SimpleQuiz\DataProvider\TestProvider();
 session_start();
-$testProvider = new \DataProvider\TestProvider();
+
 if (!isset($_SESSION['statistics'])) {
     $_SESSION['statistics'] = [];
 }

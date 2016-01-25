@@ -1,0 +1,18 @@
+{
+    "name": "chabanenk0/simplequiz",
+    "description": "Simple quiz example in php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Dmytry Chabanenko",
+            "email": "chdn6026@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Chabanenko\\SimpleQuiz\\DataProvider\\": "./DataProvider"
+        }
+    }
+}
