@@ -2,7 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-$testProvider = new Chabanenko\SimpleQuiz\DataProvider\TestProvider();
+$testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
 session_start();
 
 if (!isset($_SESSION['statistics'])) {
@@ -24,7 +24,7 @@ if (array_key_exists('answer', $_POST) && array_key_exists('question', $_SESSION
 
     $termStatistics['total_answers']++;
 
-    if ($chosenAnswer == $generatedQuestion['correctDescriptionNumber']) {
+    if ($chosenAnswer == $generatedQuestion['correctItemNumber']) {
         $termStatistics['correct_answers']++;
         $correct = true;
     }

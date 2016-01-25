@@ -1,5 +1,5 @@
 <form method="POST">
-    <p>What the function <?php echo $question['term']?> is doing?</p>
+    <p>What the function <?php echo $question['correctTerm']?> is doing?</p>
     <input type="radio" id="id01" name="answer" value="1">
     <label for="id01"><?php echo $question['description1']; ?></label>
     <br>

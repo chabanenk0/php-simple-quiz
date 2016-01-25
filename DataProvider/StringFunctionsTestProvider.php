@@ -9,7 +9,7 @@
 namespace Chabanenko\SimpleQuiz\DataProvider;
 
 
-class TestProvider
+class StringFunctionsTestProvider extends AbstractTestProvider
 {
     private function getCypherStringFunctionTermsQuestions()
     {
@@ -127,57 +127,12 @@ class TestProvider
             'wordwrap' => 'Wraps a string to a given number of characters',
         ];
     }
-    public function getStringFunctionTermsQuestions()
+    public function getFunctionTermsQuestions()
     {
         return array_merge(
             $this->getCypherStringFunctionTermsQuestions(),
             $this->getEncodedStringFunctionTermsQuestions(),
             $this->getRegularStringFunctionTermsQuestions()
         );
-    }
-
-    public function getRandomQuestionByTerm()
-    {
-        $terms = $this->getStringFunctionTermsQuestions();
-
-        $n = count($terms);
-
-        $randomNumber = rand(0, $n - 1);
-
-        $correctTerm =  array_keys($terms)[$randomNumber];
-
-        $correctDescription = $terms[$correctTerm];
-        $chosenKeys = [$correctTerm];
-        $chosenDescriptions = [$correctDescription];
-
-        for ($i = 0; $i < 3; $i++) {
-            $incorrectItem = $this->getIncorrectItem($terms, $chosenKeys);
-            $chosenKeys[] = $incorrectItem['key'];
-            $chosenDescriptions[] = $incorrectItem['description'];
-        }
-        shuffle($chosenDescriptions);
-
-        return [
-            'term' => $correctTerm,
-            'description1' => $chosenDescriptions[0],
-            'description2' => $chosenDescriptions[1],
-            'description3' => $chosenDescriptions[2],
-            'description4' => $chosenDescriptions[3],
-            'correctDescription' => $correctDescription,
-            'correctDescriptionNumber' => 1 + array_search($correctDescription, $chosenDescriptions),
-        ];
-    }
-
-    private function getIncorrectItem($terms, $chosenKeys)
-    {
-        $n = count($terms);
-        do {
-            $newI = rand(0, $n - 1);
-            $newKey = array_keys($terms)[$newI];
-        } while (in_array($newKey, $chosenKeys));
-        return [
-            'key' => $newKey,
-            'description' => $terms[$newKey],
-        ];
     }
 }
