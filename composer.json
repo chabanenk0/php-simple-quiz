@@ -9,7 +9,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "slim/slim": "^3.0"
+    },
     "autoload": {
         "psr-4": {
             "Chabanenko\\SimpleQuiz\\DataProvider\\": "./DataProvider"

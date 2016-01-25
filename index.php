@@ -2,42 +2,70 @@
 
 require_once 'vendor/autoload.php';
 
-$testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
 session_start();
 
 if (!isset($_SESSION['statistics'])) {
     $_SESSION['statistics'] = [];
 }
 
-if (array_key_exists('answer', $_POST) && array_key_exists('question', $_SESSION)) {
-    $chosenAnswer = $_POST['answer'];
-    $generatedQuestion = $_SESSION['question'];
-    $statistics = $_SESSION['statistics'];
-    if (isset($statistics[$generatedQuestion['term']])) {
-        $termStatistics = $statistics[$generatedQuestion['term']];
+$app = new \Slim\App();
+$app->map(['GET', 'POST'], '/tests/{id}', function ($request, $response, $args) {
+    $testId = $args['id'];
+    switch ($testId) {
+        case 1: {
+            $testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
+            $question = $testProvider->getRandomQuestionByTerm();
+            $templatePath = 'views/render_question.php';
+            break;
+        }
+        default: {
+            $templatePath = 'views/tests_list.php';
+            break;
+        }
+    }
+
+    if ($request->isGet()) {
+        $_SESSION['question']  = $question;
+        require_once $templatePath;
     } else {
-        $termStatistics = [
-            'total_answers' => 0,
-            'correct_answers' => 0,
-        ];
+        $chosenAnswer = $request->getParam('answer');
+        $generatedQuestion = $_SESSION['question'];
+        $statistics = $_SESSION['statistics'];
+        if (isset($statistics[$generatedQuestion['term']])) {
+            $termStatistics = $statistics[$generatedQuestion['term']];
+        } else {
+            $termStatistics = [
+                'total_answers' => 0,
+                'correct_answers' => 0,
+            ];
+        }
+
+        $termStatistics['total_answers']++;
+
+        if ($chosenAnswer == $generatedQuestion['correctItemNumber']) {
+            $termStatistics['correct_answers']++;
+            $correct = true;
+        }
+
+        $statistics[$generatedQuestion['term']] = $termStatistics;
+
+        $_SESSION['statistics'] = $statistics;
+
+        require_once 'views/render_statistics.php';
     }
+})->setName('tests');;
 
-    $termStatistics['total_answers']++;
+$app->get('/', function($request, $response, $args) {
+    $templatePath = 'views/tests_list.php';
+    require_once $templatePath;
+})->setName('home');
 
-    if ($chosenAnswer == $generatedQuestion['correctItemNumber']) {
-        $termStatistics['correct_answers']++;
-        $correct = true;
-    }
+$app->get('/reset', function($request, $response, $args) {
+    unset($_SESSION['question']);
+    unset($_SESSION['statistics']);
+    $templatePath = 'views/tests_list.php';
+    require_once $templatePath;
+})->setName('reset');
 
-    $statistics[$generatedQuestion['term']] = $termStatistics;
 
-    $_SESSION['statistics'] = $statistics;
-
-    require_once 'views/render_statistics.php';
-
-} else {
-    $question = $testProvider->getRandomQuestionByTerm();
-    $_SESSION['question']  = $question;
-    require_once 'views/render_question.php';
-}
-
+$app->run();

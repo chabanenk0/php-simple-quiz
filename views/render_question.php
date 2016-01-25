@@ -14,3 +14,4 @@
     <br>
     <input type="submit" value="Send">
 </form>
+<a href="<?php echo $this->router->pathFor('reset'); ?>">Reset results</a>
