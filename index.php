@@ -11,20 +11,26 @@ if (!isset($_SESSION['statistics'])) {
 $app = new \Slim\App();
 $app->map(['GET', 'POST'], '/tests/{id}', function ($request, $response, $args) {
     $testId = $args['id'];
-    switch ($testId) {
-        case 1: {
-            $testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
-            $question = $testProvider->getRandomQuestionByTerm();
-            $templatePath = 'views/render_question.php';
-            break;
-        }
-        default: {
-            $templatePath = 'views/tests_list.php';
-            break;
-        }
-    }
 
     if ($request->isGet()) {
+        switch ($testId) {
+            case 1: {
+                $testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
+                $question = $testProvider->getRandomQuestionByTerm();
+                $templatePath = 'views/render_question.php';
+                break;
+            }
+            case 2: {
+                $testProvider = new Chabanenko\SimpleQuiz\DataProvider\StringFunctionsTestProvider();
+                $question = $testProvider->getRandomQuestionByDescription();
+                $templatePath = 'views/render_question_description.php';
+                break;
+            }
+            default: {
+                $templatePath = 'views/tests_list.php';
+                break;
+            }
+        }
         $_SESSION['question']  = $question;
         require_once $templatePath;
     } else {

@@ -122,7 +122,7 @@ class StringFunctionsTestProvider extends AbstractTestProvider
             'ucfirst' => 'Make a string\'s first character uppercase',
             'ucwords' => 'Uppercase the first character of each word in a string',
             'vfprintf' => 'Write a formatted string to a stream',
-            'vprintf' => 'Output a formatted string',
+            'vprintf' => 'Output a formatted string (accepted an array of arguments)',
             'vsprintf' => 'Return a formatted string',
             'wordwrap' => 'Wraps a string to a given number of characters',
         ];

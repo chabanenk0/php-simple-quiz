@@ -18,7 +18,7 @@ abstract class AbstractTestProvider
      */
     abstract public function getFunctionTermsQuestions();
 
-    public function getRandomQuestionByTerm()
+    private function getRandomQuestion()
     {
         $terms = $this->getFunctionTermsQuestions();
 
@@ -37,7 +37,10 @@ abstract class AbstractTestProvider
             $chosenKeys[] = $incorrectItem['key'];
             $chosenDescriptions[] = $incorrectItem['description'];
         }
-        shuffle($chosenDescriptions);
+        $shuffledIndices = range(0, count($chosenKeys) - 1);
+        shuffle($shuffledIndices);
+        $chosenKeys = $this->reorderArrayByNumbers($chosenKeys, $shuffledIndices);
+        $chosenDescriptions = $this->reorderArrayByNumbers($chosenDescriptions , $shuffledIndices);
 
         return [
             'term1' => $chosenKeys[0],
@@ -54,6 +57,26 @@ abstract class AbstractTestProvider
         ];
     }
 
+    private function reorderArrayByNumbers($array, $numbers)
+    {
+        $newArray = [];
+        for ($i = 0; $i < count($numbers); $i++) {
+            $newArray[$i] = $array[$numbers[$i]];
+        }
+
+        return $newArray;
+    }
+    public function getRandomQuestionByTerm()
+    {
+        return $this->getRandomQuestion();
+    }
+
+    public function getRandomQuestionByDescription()
+    {
+        return $this->getRandomQuestion();
+    }
+
+
     protected function getIncorrectItem($terms, $chosenKeys)
     {
         $n = count($terms);
@@ -64,38 +87,6 @@ abstract class AbstractTestProvider
         return [
             'key' => $newKey,
             'description' => $terms[$newKey],
-        ];
-    }
-
-    public function getRandomQuestionByDescription()
-    {
-        $terms = $this->getFunctionTermsQuestions();
-
-        $n = count($terms);
-
-        $randomNumber = rand(0, $n - 1);
-
-        $correctTerm =  array_keys($terms)[$randomNumber];
-
-        $correctDescription = $terms[$correctTerm];
-        $chosenKeys = [$correctTerm];
-        $chosenDescriptions = [$correctDescription];
-
-        for ($i = 0; $i < 3; $i++) {
-            $incorrectItem = $this->getIncorrectItem($terms, $chosenKeys);
-            $chosenKeys[] = $incorrectItem['key'];
-            $chosenDescriptions[] = $incorrectItem['description'];
-        }
-        shuffle($chosenDescriptions);
-
-        return [
-            'description' => $correctTerm,
-            'description1' => $chosenDescriptions[0],
-            'description2' => $chosenDescriptions[1],
-            'description3' => $chosenDescriptions[2],
-            'description4' => $chosenDescriptions[3],
-            'correctDescription' => $correctDescription,
-            'correctDescriptionNumber' => 1 + array_search($correctDescription, $chosenDescriptions),
         ];
     }
 
